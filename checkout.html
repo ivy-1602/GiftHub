@@ -6,16 +6,18 @@
   <title>Checkout – GiftHub</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    body { overflow-x: hidden; }
+
+    /* ── CHECKOUT WRAP ── */
     .checkout-wrap {
       max-width: 1060px;
       margin: 0 auto;
       padding: 3rem 2rem;
+      width: 100%;
+      box-sizing: border-box;
     }
 
-    .checkout-head {
-      margin-bottom: 2.5rem;
-    }
-
+    .checkout-head { margin-bottom: 2.5rem; }
     .checkout-head h1 {
       font-family: var(--font-display);
       font-size: 2rem;
@@ -23,10 +25,9 @@
       color: var(--charcoal);
       margin-bottom: 0.25rem;
     }
-
     .checkout-head p { font-size: 0.875rem; color: var(--muted); }
 
-    /* STEPS */
+    /* ── STEPS ── */
     .checkout-steps {
       display: flex;
       align-items: center;
@@ -57,9 +58,8 @@
       background: var(--white);
       transition: all var(--transition);
     }
-
     .step-num.active { border-color: var(--amber); background: var(--amber); color: var(--charcoal); }
-    .step-num.done { border-color: var(--amber-dark); background: var(--amber-dark); color: white; }
+    .step-num.done   { border-color: var(--amber-dark); background: var(--amber-dark); color: white; }
 
     .step-label {
       font-size: 0.8rem;
@@ -67,9 +67,8 @@
       color: var(--muted);
       transition: color var(--transition);
     }
-
     .step.active .step-label { color: var(--charcoal); }
-    .step.done .step-label { color: var(--amber-dark); }
+    .step.done   .step-label { color: var(--amber-dark); }
 
     .step-line {
       flex: 1;
@@ -79,10 +78,9 @@
       min-width: 30px;
       transition: background var(--transition);
     }
-
     .step-line.done { background: var(--amber); }
 
-    /* LAYOUT */
+    /* ── LAYOUT ── */
     .checkout-layout {
       display: grid;
       grid-template-columns: 1fr 340px;
@@ -90,7 +88,7 @@
       align-items: start;
     }
 
-    /* SECTION CARD */
+    /* ── CO-CARD ── */
     .co-card {
       background: var(--white);
       border: 1px solid var(--border);
@@ -121,7 +119,7 @@
       font-size: 0.9rem;
     }
 
-    /* PAYMENT METHODS */
+    /* ── PAYMENT METHODS ── */
     .payment-methods {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -142,28 +140,26 @@
       gap: 6px;
       background: var(--white);
     }
-
-    .pm-option:hover { border-color: var(--amber); background: var(--amber-light); }
+    .pm-option:hover  { border-color: var(--amber); background: var(--amber-light); }
     .pm-option.selected { border-color: var(--amber); background: var(--amber-light); }
 
-    .pm-icon { font-size: 1.5rem; }
+    .pm-icon  { font-size: 1.5rem; }
     .pm-label { font-size: 0.75rem; font-weight: 600; color: var(--charcoal); }
 
-    /* CARD FORM */
+    /* ── CARD / UPI FORMS ── */
     .card-form { display: none; }
     .card-form.visible { display: block; }
+    .upi-form  { display: none; }
+    .upi-form.visible  { display: block; }
 
+    /* Card row (expiry + cvv) */
     .card-input-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
 
-    /* UPI FORM */
-    .upi-form { display: none; }
-    .upi-form.visible { display: block; }
-
-    /* ORDER SUMMARY SIDEBAR */
+    /* ── ORDER SUMMARY SIDEBAR ── */
     .co-summary {
       background: var(--white);
       border: 1px solid var(--border);
@@ -190,7 +186,6 @@
       padding: 0.75rem 0;
       border-bottom: 1px solid var(--border);
     }
-
     .co-item:last-child { border-bottom: none; }
 
     .co-item-img {
@@ -198,16 +193,18 @@
       height: 44px;
       background: var(--cream-dark);
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
+      overflow: hidden;
       flex-shrink: 0;
+    }
+    .co-item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .co-item-details { flex: 1; min-width: 0; }
-    .co-item-name { font-size: 0.8rem; font-weight: 600; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .co-item-qty { font-size: 0.72rem; color: var(--muted); }
+    .co-item-name  { font-size: 0.8rem; font-weight: 600; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .co-item-qty   { font-size: 0.72rem; color: var(--muted); }
     .co-item-price { font-size: 0.85rem; font-weight: 700; color: var(--amber-dark); flex-shrink: 0; }
 
     .co-totals { margin-top: 1rem; }
@@ -219,7 +216,6 @@
       color: var(--charcoal-mid);
       padding: 0.4rem 0;
     }
-
     .co-row.total {
       font-size: 1rem;
       font-weight: 700;
@@ -228,10 +224,9 @@
       margin-top: 0.5rem;
       padding-top: 0.75rem;
     }
-
     .co-row.total span:last-child { color: var(--amber-dark); }
 
-    /* SECURITY BADGES */
+    /* ── SECURITY BADGES ── */
     .security-badges {
       display: flex;
       justify-content: center;
@@ -240,7 +235,6 @@
       padding-top: 1.25rem;
       border-top: 1px solid var(--border);
     }
-
     .sec-badge {
       display: flex;
       align-items: center;
@@ -250,19 +244,51 @@
       font-weight: 500;
     }
 
+    /* ── REVIEW GRID ── */
+    .review-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE — single source of truth
+    ══════════════════════════════════════ */
+
+    /* Tablet: collapse sidebar to below */
     @media (max-width: 860px) {
       .checkout-layout { grid-template-columns: 1fr; }
       .co-summary { position: static; }
-      .payment-methods { grid-template-columns: repeat(3, 1fr); }
     }
 
+    /* Phablet / large phone */
+    @media (max-width: 600px) {
+      .checkout-wrap   { padding: 1.5rem 1rem; }
+      .co-card         { padding: 1.1rem 1rem; }
+      .checkout-head h1 { font-size: 1.5rem; }
+
+      /* Delivery form: stack first/last name */
+      .form-row { grid-template-columns: 1fr !important; }
+
+      /* Payment grid: 2 cols */
+      .payment-methods { grid-template-columns: repeat(2, 1fr); }
+
+      /* Card expiry/CVV: stack */
+      .card-input-row  { grid-template-columns: 1fr; }
+
+      /* Review meta: stack */
+      .review-meta { grid-template-columns: 1fr; gap: 1rem; }
+    }
+
+    /* Small phone */
     @media (max-width: 480px) {
-      .checkout-wrap { padding: 1.5rem 1rem; }
-      .co-card { padding: 1.25rem; }
-      .payment-methods { grid-template-columns: 1fr 1fr; }
-      .card-input-row { grid-template-columns: 1fr; }
-      .checkout-steps { gap: 0; }
-      .step-label { display: none; }
+      .checkout-wrap   { padding: 1.25rem 0.75rem; }
+      .co-card         { padding: 1rem 0.875rem; }
+      .step-label      { display: none; }
+      .step-line       { margin: 0 0.4rem; min-width: 16px; }
+      .security-badges { gap: 0.75rem; flex-wrap: wrap; }
+      .toast           { left: 1rem; right: 1rem; bottom: 1rem; }
     }
   </style>
 </head>
@@ -516,8 +542,8 @@
         if (!p) return '';
         return `<div class="co-item">
           <div class="co-item-img">
-  <img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-</div>
+            <img src="${p.img}" alt="${p.name}">
+          </div>
           <div class="co-item-details">
             <div class="co-item-name">${p.name}</div>
             <div class="co-item-qty">Qty: ${item.qty}</div>
@@ -525,8 +551,8 @@
           <div class="co-item-price">₹${(p.price * item.qty).toLocaleString('en-IN')}</div>
         </div>`;
       }).join('');
-      document.getElementById('co-sub').textContent = '₹' + subtotal.toLocaleString('en-IN');
-      document.getElementById('co-ship').textContent = shipping === 0 ? 'FREE' : '₹' + shipping;
+      document.getElementById('co-sub').textContent   = '₹' + subtotal.toLocaleString('en-IN');
+      document.getElementById('co-ship').textContent  = shipping === 0 ? 'FREE' : '₹' + shipping;
       document.getElementById('co-total').textContent = '₹' + total.toLocaleString('en-IN');
     }
 
@@ -548,51 +574,50 @@
       setStep(1);
       document.getElementById('section-delivery').style.display = 'block';
       document.getElementById('section-payment').style.display = 'none';
-      document.getElementById('section-review').style.display = 'none';
+      document.getElementById('section-review').style.display  = 'none';
     }
 
     function goToPayment() {
-      const fn = document.getElementById('fn').value.trim();
-      const em = document.getElementById('em').value.trim();
-      const a1 = document.getElementById('a1').value.trim();
+      const fn   = document.getElementById('fn').value.trim();
+      const em   = document.getElementById('em').value.trim();
+      const a1   = document.getElementById('a1').value.trim();
       const city = document.getElementById('city').value.trim();
-      const pin = document.getElementById('pin').value.trim();
+      const pin  = document.getElementById('pin').value.trim();
       if (!fn || !em || !a1 || !city || !pin) return showToast('Please fill all required fields.');
       if (!em.includes('@')) return showToast('Please enter a valid email.');
       setStep(2);
       document.getElementById('section-delivery').style.display = 'none';
-      document.getElementById('section-payment').style.display = 'block';
-      document.getElementById('section-review').style.display = 'none';
+      document.getElementById('section-payment').style.display  = 'block';
+      document.getElementById('section-review').style.display   = 'none';
     }
 
     function goToPayment2() {
       setStep(2);
       document.getElementById('section-delivery').style.display = 'none';
-      document.getElementById('section-payment').style.display = 'block';
-      document.getElementById('section-review').style.display = 'none';
+      document.getElementById('section-payment').style.display  = 'block';
+      document.getElementById('section-review').style.display   = 'none';
     }
 
     function goToReview() {
       setStep(3);
       document.getElementById('section-delivery').style.display = 'none';
-      document.getElementById('section-payment').style.display = 'none';
-      document.getElementById('section-review').style.display = 'block';
+      document.getElementById('section-payment').style.display  = 'none';
+      document.getElementById('section-review').style.display   = 'block';
       buildReview();
     }
 
     function buildReview() {
-      const fn = document.getElementById('fn').value;
-      const ln = document.getElementById('ln').value;
-      const em = document.getElementById('em').value;
-      const a1 = document.getElementById('a1').value;
-      const city = document.getElementById('city').value;
-      const pin = document.getElementById('pin').value;
+      const fn    = document.getElementById('fn').value;
+      const ln    = document.getElementById('ln').value;
+      const a1    = document.getElementById('a1').value;
+      const city  = document.getElementById('city').value;
+      const pin   = document.getElementById('pin').value;
       const state = document.getElementById('state').value;
       const subtotal = Cart.total();
       const shipping = subtotal >= 1499 ? 0 : 99;
-      const total = subtotal + shipping;
+      const total    = subtotal + shipping;
       document.getElementById('review-body').innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+        <div class="review-meta">
           <div>
             <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Delivering to</div>
             <div style="font-size:0.875rem;color:var(--charcoal);line-height:1.7">${fn} ${ln}<br>${a1}<br>${city}, ${state} – ${pin}</div>
@@ -615,8 +640,8 @@
       selectedPM = pm;
       document.querySelectorAll('.pm-option').forEach(o => o.classList.remove('selected'));
       el.classList.add('selected');
-      document.getElementById('form-card').className = 'card-form' + (pm === 'card' ? ' visible' : '');
-      document.getElementById('form-upi').className = 'upi-form' + (pm === 'upi' ? ' visible' : '');
+      document.getElementById('form-card').className  = 'card-form'  + (pm === 'card' ? ' visible' : '');
+      document.getElementById('form-upi').className   = 'upi-form'   + (pm === 'upi'  ? ' visible' : '');
       document.getElementById('form-other').style.display = ['netbanking','wallet','cod','emi'].includes(pm) ? 'block' : 'none';
     }
 
@@ -625,7 +650,6 @@
       return labels[selectedPM] || 'Card';
     }
 
-    // Card number formatting
     function formatCard(el) {
       let v = el.value.replace(/\D/g,'').substring(0,16);
       el.value = v.replace(/(.{4})/g,'$1 ').trim();
