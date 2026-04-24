@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout – GiftHub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout-wrap {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .checkout-head {
+      margin-bottom: 2.5rem;
+    }
+
+    .checkout-head h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 0.25rem;
+    }
+
+    .checkout-head p { font-size: 0.875rem; color: var(--muted); }
+
+    /* STEPS */
+    .checkout-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--white);
+      transition: all var(--transition);
+    }
+
+    .step-num.active { border-color: var(--amber); background: var(--amber); color: var(--charcoal); }
+    .step-num.done { border-color: var(--amber-dark); background: var(--amber-dark); color: white; }
+
+    .step-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+
+    .step.active .step-label { color: var(--charcoal); }
+    .step.done .step-label { color: var(--amber-dark); }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin: 0 0.75rem;
+      min-width: 30px;
+      transition: background var(--transition);
+    }
+
+    .step-line.done { background: var(--amber); }
+
+    /* LAYOUT */
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* SECTION CARD */
+    .co-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .co-card-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .co-card-title .step-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--amber-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* PAYMENT METHODS */
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pm-option {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 0.75rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+    }
+
+    .pm-option:hover { border-color: var(--amber); background: var(--amber-light); }
+    .pm-option.selected { border-color: var(--amber); background: var(--amber-light); }
+
+    .pm-icon { font-size: 1.5rem; }
+    .pm-label { font-size: 0.75rem; font-weight: 600; color: var(--charcoal); }
+
+    /* CARD FORM */
+    .card-form { display: none; }
+    .card-form.visible { display: block; }
+
+    .card-input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* UPI FORM */
+    .upi-form { display: none; }
+    .upi-form.visible { display: block; }
+
+    /* ORDER SUMMARY SIDEBAR */
+    .co-summary {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      position: sticky;
+      top: 80px;
+    }
+
+    .co-summary-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 1.25rem;
+    }
+
+    .co-items { margin-bottom: 1.25rem; }
+
+    .co-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .co-item:last-child { border-bottom: none; }
+
+    .co-item-img {
+      width: 44px;
+      height: 44px;
+      background: var(--cream-dark);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .co-item-details { flex: 1; min-width: 0; }
+    .co-item-name { font-size: 0.8rem; font-weight: 600; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .co-item-qty { font-size: 0.72rem; color: var(--muted); }
+    .co-item-price { font-size: 0.85rem; font-weight: 700; color: var(--amber-dark); flex-shrink: 0; }
+
+    .co-totals { margin-top: 1rem; }
+
+    .co-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--charcoal-mid);
+      padding: 0.4rem 0;
+    }
+
+    .co-row.total {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      border-top: 2px solid var(--border-strong);
+      margin-top: 0.5rem;
+      padding-top: 0.75rem;
+    }
+
+    .co-row.total span:last-child { color: var(--amber-dark); }
+
+    /* SECURITY BADGES */
+    .security-badges {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .sec-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      color: var(--muted-light);
+      font-weight: 500;
+    }
+
+    @media (max-width: 860px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .co-summary { position: static; }
+      .payment-methods { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .checkout-wrap { padding: 1.5rem 1rem; }
+      .co-card { padding: 1.25rem; }
+      .payment-methods { grid-template-columns: 1fr 1fr; }
+      .card-input-row { grid-template-columns: 1fr; }
+      .checkout-steps { gap: 0; }
+      .step-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <div class="page-wrap">
+    <div class="checkout-wrap">
+      <div class="checkout-head">
+        <h1>Checkout</h1>
+        <p>You're almost there. Fill in your details below.</p>
+      </div>
+
+      <!-- STEPS -->
+      <div class="checkout-steps">
+        <div class="step active" id="step1">
+          <div class="step-num active">1</div>
+          <span class="step-label">Delivery</span>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step" id="step2">
+          <div class="step-num">2</div>
+          <span class="step-label">Payment</span>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step" id="step3">
+          <div class="step-num">3</div>
+          <span class="step-label">Review</span>
+        </div>
+      </div>
+
+      <div class="checkout-layout">
+        <div>
+
+          <!-- STEP 1: DELIVERY -->
+          <div id="section-delivery">
+            <div class="co-card">
+              <h3 class="co-card-title">
+                <span class="step-icon">📦</span> Delivery Details
+              </h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input class="form-input" type="text" id="fn" placeholder="First name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-input" type="text" id="ln" placeholder="Last name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input class="form-input" type="email" id="em" placeholder="Order confirmation sent here">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input class="form-input" type="tel" id="ph" placeholder="+91 XXXXX XXXXX">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Address Line 1</label>
+                <input class="form-input" type="text" id="a1" placeholder="Flat / House no, Building name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Address Line 2 (optional)</label>
+                <input class="form-input" type="text" id="a2" placeholder="Street, Area, Landmark">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">City</label>
+                  <input class="form-input" type="text" id="city" placeholder="City">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">PIN Code</label>
+                  <input class="form-input" type="text" id="pin" placeholder="6-digit PIN">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">State</label>
+                <select class="form-input" id="state">
+                  <option value="">Select state</option>
+                  <option>Maharashtra</option><option>Delhi</option><option>Karnataka</option>
+                  <option>Tamil Nadu</option><option>Telangana</option><option>Gujarat</option>
+                  <option>Rajasthan</option><option>West Bengal</option><option>Uttar Pradesh</option>
+                </select>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:10px;margin-top:0.5rem">
+                <input type="checkbox" id="gift-wrap" style="width:16px;height:16px;accent-color:var(--amber)">
+                <label for="gift-wrap" style="font-size:0.85rem;color:var(--charcoal-mid);cursor:pointer">🎁 Add free gift wrapping & personalized message</label>
+              </div>
+              <div id="gift-msg-group" style="display:none;margin-top:1rem">
+                <label class="form-label">Gift Message (optional)</label>
+                <textarea class="form-input" id="gift-msg" rows="2" placeholder="Write a short note to the recipient..."></textarea>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="font-size:1rem;padding:0.9rem 2rem" onclick="goToPayment()">Continue to Payment →</button>
+          </div>
+
+          <!-- STEP 2: PAYMENT -->
+          <div id="section-payment" style="display:none">
+            <div class="co-card">
+              <h3 class="co-card-title">
+                <span class="step-icon">💳</span> Payment Method
+              </h3>
+
+              <div class="payment-methods">
+                <div class="pm-option selected" onclick="selectPM('card', this)">
+                  <span class="pm-icon">💳</span>
+                  <span class="pm-label">Card</span>
+                </div>
+                <div class="pm-option" onclick="selectPM('upi', this)">
+                  <span class="pm-icon">📱</span>
+                  <span class="pm-label">UPI</span>
+                </div>
+                <div class="pm-option" onclick="selectPM('netbanking', this)">
+                  <span class="pm-icon">🏦</span>
+                  <span class="pm-label">Net Banking</span>
+                </div>
+                <div class="pm-option" onclick="selectPM('wallet', this)">
+                  <span class="pm-icon">👛</span>
+                  <span class="pm-label">Wallet</span>
+                </div>
+                <div class="pm-option" onclick="selectPM('cod', this)">
+                  <span class="pm-icon">💵</span>
+                  <span class="pm-label">Cash on Delivery</span>
+                </div>
+                <div class="pm-option" onclick="selectPM('emi', this)">
+                  <span class="pm-icon">📅</span>
+                  <span class="pm-label">EMI</span>
+                </div>
+              </div>
+
+              <!-- CARD FORM -->
+              <div class="card-form visible" id="form-card">
+                <div class="form-group">
+                  <label class="form-label">Card Number</label>
+                  <input class="form-input" type="text" id="cardnum" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+                </div>
+                <div class="card-input-row">
+                  <div class="form-group">
+                    <label class="form-label">Expiry Date</label>
+                    <input class="form-input" type="text" id="expiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">CVV</label>
+                    <input class="form-input" type="password" id="cvv" placeholder="•••" maxlength="3">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Name on Card</label>
+                  <input class="form-input" type="text" id="cardname" placeholder="As printed on card">
+                </div>
+              </div>
+
+              <!-- UPI FORM -->
+              <div class="upi-form" id="form-upi">
+                <div class="form-group">
+                  <label class="form-label">UPI ID</label>
+                  <input class="form-input" type="text" id="upiid" placeholder="yourname@upi">
+                </div>
+                <p style="font-size:0.78rem;color:var(--muted);margin-top:-0.5rem">Enter your UPI ID (e.g. name@okicici, name@ybl)</p>
+              </div>
+
+              <!-- OTHER METHODS -->
+              <div id="form-other" style="display:none">
+                <p style="font-size:0.875rem;color:var(--muted);text-align:center;padding:1.5rem;background:var(--cream-dark);border-radius:var(--radius-sm)">
+                  You'll be redirected to your bank/wallet to complete the payment securely.
+                </p>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--muted);margin-top:1rem">
+                🔒 <span>256-bit SSL encryption. Your payment info is never stored.</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:1rem;flex-wrap:wrap">
+              <button class="btn btn-outline" onclick="goToDelivery()">← Back</button>
+              <button class="btn btn-primary" style="font-size:1rem;padding:0.9rem 2rem" onclick="goToReview()">Review Order →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: REVIEW -->
+          <div id="section-review" style="display:none">
+            <div class="co-card">
+              <h3 class="co-card-title">
+                <span class="step-icon">✅</span> Review Your Order
+              </h3>
+              <div id="review-body"></div>
+            </div>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap">
+              <button class="btn btn-outline" onclick="goToPayment2()">← Back</button>
+              <button class="btn btn-coral" id="place-btn" style="font-size:1rem;padding:0.9rem 2rem" onclick="placeOrder()">
+                🎁 Place Order
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ORDER SUMMARY SIDEBAR -->
+        <div>
+          <div class="co-summary">
+            <div class="co-summary-title">Your Order</div>
+            <div class="co-items" id="co-items-list"></div>
+            <div class="co-totals">
+              <div class="co-row"><span>Subtotal</span><span id="co-sub">–</span></div>
+              <div class="co-row"><span>Shipping</span><span id="co-ship">–</span></div>
+              <div class="co-row total"><span>Total</span><span id="co-total">–</span></div>
+            </div>
+            <div class="security-badges">
+              <span class="sec-badge">🔒 Secure</span>
+              <span class="sec-badge">🚚 Fast Delivery</span>
+              <span class="sec-badge">↩ Easy Returns</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-root"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('nav-root').innerHTML = renderNav('');
+    document.getElementById('footer-root').innerHTML = renderFooter();
+
+    // Pre-fill if logged in
+    const user = Auth.get();
+    if (user) {
+      document.getElementById('em').value = user.email || '';
+      const parts = (user.name || '').split(' ');
+      if (parts[0]) document.getElementById('fn').value = parts[0];
+      if (parts[1]) document.getElementById('ln').value = parts.slice(1).join(' ');
+    }
+
+    // Gift wrap toggle
+    document.getElementById('gift-wrap').addEventListener('change', function() {
+      document.getElementById('gift-msg-group').style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Render sidebar items
+    function renderSidebarItems() {
+      const items = Cart.get();
+      if (items.length === 0) { window.location.href = 'cart.html'; return; }
+      const subtotal = Cart.total();
+      const shipping = subtotal >= 1499 ? 0 : 99;
+      const total = subtotal + shipping;
+      document.getElementById('co-items-list').innerHTML = items.map(item => {
+        const p = PRODUCTS.find(x => x.id === item.id);
+        if (!p) return '';
+        return `<div class="co-item">
+          <div class="co-item-img">
+  <img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+</div>
+          <div class="co-item-details">
+            <div class="co-item-name">${p.name}</div>
+            <div class="co-item-qty">Qty: ${item.qty}</div>
+          </div>
+          <div class="co-item-price">₹${(p.price * item.qty).toLocaleString('en-IN')}</div>
+        </div>`;
+      }).join('');
+      document.getElementById('co-sub').textContent = '₹' + subtotal.toLocaleString('en-IN');
+      document.getElementById('co-ship').textContent = shipping === 0 ? 'FREE' : '₹' + shipping;
+      document.getElementById('co-total').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    renderSidebarItems();
+
+    // STEP NAVIGATION
+    function setStep(n) {
+      [1,2,3].forEach(i => {
+        const s = document.getElementById(`step${i}`);
+        s.querySelector('.step-num').className = 'step-num' + (i < n ? ' done' : i === n ? ' active' : '');
+        s.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+      });
+      [1,2].forEach(i => {
+        document.getElementById(`line${i}`).className = 'step-line' + (i < n ? ' done' : '');
+      });
+    }
+
+    function goToDelivery() {
+      setStep(1);
+      document.getElementById('section-delivery').style.display = 'block';
+      document.getElementById('section-payment').style.display = 'none';
+      document.getElementById('section-review').style.display = 'none';
+    }
+
+    function goToPayment() {
+      const fn = document.getElementById('fn').value.trim();
+      const em = document.getElementById('em').value.trim();
+      const a1 = document.getElementById('a1').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const pin = document.getElementById('pin').value.trim();
+      if (!fn || !em || !a1 || !city || !pin) return showToast('Please fill all required fields.');
+      if (!em.includes('@')) return showToast('Please enter a valid email.');
+      setStep(2);
+      document.getElementById('section-delivery').style.display = 'none';
+      document.getElementById('section-payment').style.display = 'block';
+      document.getElementById('section-review').style.display = 'none';
+    }
+
+    function goToPayment2() {
+      setStep(2);
+      document.getElementById('section-delivery').style.display = 'none';
+      document.getElementById('section-payment').style.display = 'block';
+      document.getElementById('section-review').style.display = 'none';
+    }
+
+    function goToReview() {
+      setStep(3);
+      document.getElementById('section-delivery').style.display = 'none';
+      document.getElementById('section-payment').style.display = 'none';
+      document.getElementById('section-review').style.display = 'block';
+      buildReview();
+    }
+
+    function buildReview() {
+      const fn = document.getElementById('fn').value;
+      const ln = document.getElementById('ln').value;
+      const em = document.getElementById('em').value;
+      const a1 = document.getElementById('a1').value;
+      const city = document.getElementById('city').value;
+      const pin = document.getElementById('pin').value;
+      const state = document.getElementById('state').value;
+      const subtotal = Cart.total();
+      const shipping = subtotal >= 1499 ? 0 : 99;
+      const total = subtotal + shipping;
+      document.getElementById('review-body').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+          <div>
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Delivering to</div>
+            <div style="font-size:0.875rem;color:var(--charcoal);line-height:1.7">${fn} ${ln}<br>${a1}<br>${city}, ${state} – ${pin}</div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Payment</div>
+            <div style="font-size:0.875rem;color:var(--charcoal)">${getPaymentSummary()}</div>
+          </div>
+        </div>
+        <div style="background:var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;font-size:0.875rem;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted)">Subtotal</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted)">Shipping</span><span>${shipping===0?'FREE':'₹'+shipping}</span></div>
+          <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;border-top:1px solid var(--border);padding-top:8px;margin-top:4px"><span>Total</span><span style="color:var(--amber-dark)">₹${total.toLocaleString('en-IN')}</span></div>
+        </div>`;
+    }
+
+    let selectedPM = 'card';
+
+    function selectPM(pm, el) {
+      selectedPM = pm;
+      document.querySelectorAll('.pm-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('form-card').className = 'card-form' + (pm === 'card' ? ' visible' : '');
+      document.getElementById('form-upi').className = 'upi-form' + (pm === 'upi' ? ' visible' : '');
+      document.getElementById('form-other').style.display = ['netbanking','wallet','cod','emi'].includes(pm) ? 'block' : 'none';
+    }
+
+    function getPaymentSummary() {
+      const labels = { card: '💳 Credit / Debit Card', upi: '📱 UPI', netbanking: '🏦 Net Banking', wallet: '👛 Wallet', cod: '💵 Cash on Delivery', emi: '📅 EMI' };
+      return labels[selectedPM] || 'Card';
+    }
+
+    // Card number formatting
+    function formatCard(el) {
+      let v = el.value.replace(/\D/g,'').substring(0,16);
+      el.value = v.replace(/(.{4})/g,'$1 ').trim();
+    }
+
+    function formatExpiry(el) {
+      let v = el.value.replace(/\D/g,'');
+      if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+      el.value = v;
+    }
+
+    function placeOrder() {
+      const btn = document.getElementById('place-btn');
+      btn.textContent = 'Processing...';
+      btn.disabled = true;
+      setTimeout(() => {
+        Cart.clear();
+        window.location.href = 'success.html';
+      }, 1800);
+    }
+  </script>
+</body>
+</html>

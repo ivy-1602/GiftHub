@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GiftHub – Find the Perfect Gift</title>
+  <meta name="description" content="Curated gifts for every personality. Tech, self-care, books, and Taylor Swift vinyls. Take the quiz.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+    /* ═══════════════════════════════════════════════
+       HERO
+       Mobile order:  [heading] [text] [buttons] [image]
+       Desktop order: [left: heading+text+buttons] [right: image]
+    ═══════════════════════════════════════════════ */
+
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      grid-template-areas: "content visual";
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .hero-content {
+      grid-area: content;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-visual {
+      grid-area: visual;
+      position: relative;
+    }
+
+    /* ── Hero text ── */
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--amber-light);
+      color: var(--amber-dark);
+      border: 1px solid rgba(232,160,48,0.3);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 4.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--charcoal);
+      margin-bottom: 1.25rem;
+      animation: fadeInUp 0.5s 0.1s ease both;
+    }
+    .hero-title em { font-style: italic; color: var(--amber); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      max-width: 460px;
+      animation: fadeInUp 0.5s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.5s 0.3s ease both;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      animation: fadeInUp 0.5s 0.4s ease both;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── Hero image ── */
+    .hero-img-main {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      overflow: hidden;
+      background: var(--cream-dark);
+      animation: fadeIn 0.6s 0.2s ease both;
+    }
+    .hero-img-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 22px;
+    }
+
+    /* ── Float cards ── */
+    .hero-float-card {
+      position: absolute;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(30,26,22,0.14);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      animation: float 3s ease-in-out infinite;
+      white-space: nowrap;
+    }
+    .fc-quiz  { bottom: 1.5rem; left: -1.5rem; }
+    .fc-match { top: 1.5rem; right: -1rem; animation-delay: 1.5s; }
+
+    /* ═══════════════════════════════════════════════
+       CATEGORIES
+    ═══════════════════════════════════════════════ */
+    .categories {
+      background: var(--charcoal);
+      padding: 3rem 2rem;
+    }
+    .categories-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .categories-inner h2 {
+      font-family: var(--font-display);
+      color: var(--cream);
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      opacity: 0.7;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .cat-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cat-card:hover {
+      background: rgba(232,160,48,0.15);
+      border-color: rgba(232,160,48,0.4);
+      transform: translateY(-2px);
+    }
+    .cat-icon { font-size: 2rem; }
+    .cat-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--cream);
+      font-weight: 600;
+    }
+    .cat-count { font-size: 0.75rem; color: rgba(253,246,237,0.5); }
+
+    /* ═══════════════════════════════════════════════
+       QUIZ BANNER
+    ═══════════════════════════════════════════════ */
+    .quiz-section { padding: 4rem 2rem; }
+    .quiz-banner {
+      background: linear-gradient(135deg, #1E1A16 0%, #3D3529 100%);
+      border-radius: 24px;
+      padding: 3.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 2rem;
+      max-width: 1180px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .quiz-banner::before {
+      content: '🎁';
+      position: absolute;
+      right: 220px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 5rem;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .quiz-banner-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    .quiz-banner h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--cream);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .quiz-banner p {
+      color: rgba(253,246,237,0.65);
+      font-size: 0.95rem;
+      max-width: 500px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FEATURED
+    ═══════════════════════════════════════════════ */
+    .featured-wrap {
+      padding: 4rem 2rem;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE — TABLET (≤900px)
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "content"
+          "visual";
+        gap: 2rem;
+        padding: 2rem 1.5rem 3rem;
+        align-items: start;
+      }
+
+      .hero-visual {
+        width: 100%;
+      }
+
+      /* float cards too close to edges on tablet — pull back */
+      .fc-quiz  { left: 0.5rem; }
+      .fc-match { right: 0.5rem; }
+
+      .hero-title { font-size: 2.4rem; }
+      .hero-stats { gap: 1.5rem; }
+
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .quiz-banner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 2.5rem 1.5rem;
+      }
+      .quiz-banner::before { display: none; }
+      .quiz-banner p { margin: 0 auto; }
+      .quiz-banner .btn { width: fit-content; margin: 0 auto; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE — MOBILE (≤600px)
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 1.5rem 1rem 2.5rem;
+        gap: 1.75rem;
+      }
+
+      .hero-title { font-size: 2rem; }
+      .hero-sub   { font-size: 0.95rem; }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      .hero-actions .btn { text-align: center; justify-content: center; }
+
+      .hero-stats { gap: 1rem; }
+      .stat-num   { font-size: 1.3rem; }
+
+      /* float cards hidden on small screens — overlap looks bad */
+      .hero-float-card { display: none; }
+
+      .hero-img-main {
+        border-radius: 16px;
+        aspect-ratio: 4 / 3;   /* slightly wider on small phones */
+      }
+      .hero-img-main img { border-radius: 16px; }
+
+      .cat-grid { gap: 0.75rem; }
+      .cat-card { padding: 1rem; }
+      .cat-icon { font-size: 1.5rem; }
+      .cat-name { font-size: 0.95rem; }
+
+      .quiz-section { padding: 2rem 1rem; }
+      .featured-wrap { padding: 2.5rem 1rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <main class="page-wrap">
+
+    <!-- ─── HERO ─────────────────────────────────────── -->
+    <div class="hero">
+
+      <!-- LEFT / TOP: all text + CTAs -->
+      <div class="hero-content">
+        <div class="hero-tag">✦ 24+ Curated Gifts</div>
+
+        <h1 class="hero-title">
+          Find the <em>perfect</em><br>gift for your loved ones.
+        </h1>
+
+        <p class="hero-sub">
+          Tech lovers, bookworms, self-care luxury obsessed ones, music lovers —
+          GiftHub has something thoughtful for everyone. Take our 5-question quiz
+          and find it in 60 seconds.
+        </p>
+
+        <div class="hero-actions">
+          <a href="quiz.html" class="btn btn-primary">Take the Gift Quiz ✦</a>
+          <a href="products.html" class="btn btn-outline">Browse All Gifts</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">24+</div>
+            <div class="stat-label">Curated Gifts</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Categories</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">60 secs</div>
+            <div class="stat-label">To Find a Match</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT / BOTTOM: image — always visible -->
+      <div class="hero-visual">
+        <div class="hero-img-main">
+          <img src="https://i.imgur.com/aukples.jpeg" alt="Curated gift flatlay">
+        </div>
+
+        <div class="hero-float-card fc-quiz">
+          <div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:2px;">Quiz complete</div>
+            <div style="font-weight:600;">3 perfect matches ✓</div>
+          </div>
+        </div>
+
+        <div class="hero-float-card fc-match">
+          <div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:2px;">New arrival</div>
+            <div style="font-weight:600;">TTPD Vinyl 🎵</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- ─── /HERO ──────────────────────────────────── -->
+
+
+    <!-- ─── CATEGORIES ───────────────────────────────── -->
+    <div class="categories">
+      <div class="categories-inner">
+        <h2>Shop by category</h2>
+        <div class="cat-grid">
+          <a href="products.html?cat=tech" class="cat-card">
+            <span class="cat-icon">🎧</span>
+            <div class="cat-name">Tech &amp; Gadgets</div>
+            <div class="cat-count">6 products</div>
+          </a>
+          <a href="products.html?cat=selfcare" class="cat-card">
+            <span class="cat-icon">🌿</span>
+            <div class="cat-name">Self-Care</div>
+            <div class="cat-count">6 products</div>
+          </a>
+          <a href="products.html?cat=books" class="cat-card">
+            <span class="cat-icon">📖</span>
+            <div class="cat-name">Books</div>
+            <div class="cat-count">6 products</div>
+          </a>
+          <a href="products.html?cat=vinyl" class="cat-card">
+            <span class="cat-icon">🎵</span>
+            <div class="cat-name">Taylor Swift Vinyls</div>
+            <div class="cat-count">6 products</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ─── QUIZ BANNER ──────────────────────────────── -->
+    <div class="quiz-section">
+      <div class="quiz-banner">
+        <div>
+          <div class="quiz-banner-label">✦ AI-Powered</div>
+          <h2>Not sure what to get?</h2>
+          <p>Answer 5 fun questions about who you're gifting and we'll match them with the perfect present from our curated catalog.</p>
+        </div>
+        <a href="quiz.html" class="btn btn-primary" style="font-size:1rem;padding:1rem 2rem;">
+          Start Quiz →
+        </a>
+      </div>
+    </div>
+
+
+    <!-- ─── FEATURED PRODUCTS ────────────────────────── -->
+    <div class="featured-wrap">
+      <div class="section-header">
+        <div class="section-label">✦ Handpicked</div>
+        <h2 class="section-title">Featured Gifts</h2>
+      </div>
+      <div class="grid-4" id="featured-grid"></div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <a href="products.html" class="btn btn-outline">View All 24 Gifts →</a>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="footer-root"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('nav-root').innerHTML  = renderNav('home');
+    document.getElementById('footer-root').innerHTML = renderFooter();
+
+    // Featured: 1 from each category
+    const featured = ['t1','s1','b4','v5']
+      .map(id => PRODUCTS.find(p => p.id === id))
+      .filter(Boolean);
+    document.getElementById('featured-grid').innerHTML = featured.map(renderProductCard).join('');
+  </script>
+
+</body>
+</html>

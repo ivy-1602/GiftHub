@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gift Quiz – GiftHub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .quiz-page {
+      min-height: calc(100vh - 64px);
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* LANDING SCREEN */
+    .quiz-landing {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .quiz-landing-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--amber-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 1.5rem;
+      border: 2px solid rgba(232,160,48,0.25);
+    }
+
+    .quiz-landing h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-landing h1 em { font-style: italic; color: var(--amber); }
+
+    .quiz-landing p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      max-width: 420px;
+    }
+
+    .quiz-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .quiz-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* QUIZ ENGINE */
+    .quiz-engine {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+      width: 100%;
+    }
+
+    .quiz-engine.active { display: flex; }
+
+    /* PROGRESS */
+    .quiz-progress {
+      margin-bottom: 2.5rem;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .progress-bar-wrap {
+      height: 5px;
+      background: var(--cream-dark);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: var(--radius-pill);
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* QUESTION CARD */
+    .question-card {
+      animation: fadeInUp 0.35s ease both;
+    }
+
+    .question-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-dark);
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+
+    .question-hint {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    /* OPTIONS GRID */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .option-tile {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .option-tile:hover {
+      border-color: var(--amber);
+      background: var(--amber-light);
+      transform: translateY(-2px);
+    }
+
+    .option-tile.selected {
+      border-color: var(--amber);
+      background: var(--amber-light);
+      box-shadow: 0 0 0 3px rgba(232,160,48,0.2);
+    }
+
+    .option-emoji { font-size: 2rem; }
+
+    .option-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      line-height: 1.3;
+    }
+
+    .option-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* NAV BUTTONS */
+    .quiz-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+
+    /* RESULTS SCREEN */
+    .quiz-results {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 2rem 5rem;
+      width: 100%;
+    }
+
+    .quiz-results.active { display: block; }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .results-persona-badge {
+      display: inline-block;
+      background: var(--amber-light);
+      color: var(--amber-dark);
+      border: 1px solid rgba(232,160,48,0.3);
+      padding: 6px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .results-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .results-subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    .results-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin: 3rem 0;
+    }
+
+    .result-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+
+    .result-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(30,26,22,0.12); }
+
+    .result-rank {
+      background: var(--charcoal);
+      color: var(--amber);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      text-align: center;
+    }
+
+    .result-rank.top { background: var(--amber); color: var(--charcoal); }
+
+    .result-img {
+      aspect-ratio: 1;
+      background: var(--cream-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 1rem;
+    }
+
+    .result-img .ph-icon { font-size: 2.5rem; }
+    .result-img .ph-label { font-size: 0.75rem; font-weight: 600; color: var(--charcoal-mid); text-align: center; }
+    .result-img .ph-hint { font-size: 0.65rem; color: var(--muted-light); text-align: center; border: 1.5px dashed var(--muted-light); border-radius: 6px; padding: 6px; }
+
+    .result-info { padding: 1rem; }
+    .result-cat { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .result-name { font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; line-height: 1.3; }
+    .result-price { font-size: 1rem; font-weight: 700; color: var(--amber-dark); margin-bottom: 6px; }
+    .result-why { font-size: 0.72rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; font-style: italic; }
+
+    .retake-section {
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      .options-grid { grid-template-columns: 1fr; }
+      .results-grid { grid-template-columns: 1fr; }
+      .quiz-engine { padding: 1.5rem 1rem 3rem; }
+      .quiz-results { padding: 1.5rem 1rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <div class="quiz-page">
+
+    <!-- LANDING -->
+    <div class="quiz-landing" id="quiz-landing">
+      <div class="quiz-landing-icon">🎁</div>
+      <h1>Find the <em>perfect</em> gift.</h1>
+      <p>Answer 5 fun questions about who you're gifting and we'll match them with curated picks from tech, self-care, books & Taylor Swift vinyls.</p>
+      <div class="quiz-meta">
+        <div class="quiz-meta-item">⏱ 60 seconds</div>
+        <div class="quiz-meta-item">✦ 5 questions</div>
+        <div class="quiz-meta-item">🎯 3 matches</div>
+      </div>
+      <button class="btn btn-primary" style="font-size:1rem;padding:1rem 2.5rem" onclick="startQuiz()">Start the Quiz →</button>
+    </div>
+
+    <!-- QUIZ ENGINE -->
+    <div class="quiz-engine" id="quiz-engine">
+      <div class="quiz-progress">
+        <div class="progress-header">
+          <span class="progress-label" id="progress-label">Question 1 of 5</span>
+          <span class="progress-label" id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div id="question-mount"></div>
+      <div class="quiz-nav">
+        <button class="btn btn-outline" id="back-btn" onclick="goBack()" style="display:none">← Back</button>
+        <div></div>
+        <button class="btn btn-primary" id="next-btn" onclick="goNext()" disabled>Next →</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="quiz-results" id="quiz-results"></div>
+
+  </div>
+
+  <div id="footer-root"></div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('nav-root').innerHTML = renderNav('quiz');
+    document.getElementById('footer-root').innerHTML = renderFooter();
+
+    const QUESTIONS = [
+      {
+        id: 'recipient',
+        text: 'Who are you gifting?',
+        hint: 'Pick the one that fits best.',
+        options: [
+          { emoji: '👫', label: 'Partner / Spouse', sub: 'Romantic & close', val: 'romantic' },
+          { emoji: '👯', label: 'Best Friend', sub: 'Fun & personal', val: 'friend' },
+          { emoji: '👨‍👩‍👧', label: 'Family Member', sub: 'Parent, sibling, relative', val: 'family' },
+          { emoji: '🧑‍💼', label: 'Colleague / Acquaintance', sub: 'Professional & thoughtful', val: 'colleague' },
+        ]
+      },
+      {
+        id: 'personality',
+        text: 'How would you describe them?',
+        hint: 'Go with your gut.',
+        options: [
+          { emoji: '📚', label: 'Cozy & Introverted', sub: 'Loves quiet, books, home vibes', val: 'cozy' },
+          { emoji: '🚀', label: 'Bold & Adventurous', sub: 'Always doing something new', val: 'bold' },
+          { emoji: '💌', label: 'Romantic & Dreamy', sub: 'Sentimental, loves aesthetics', val: 'romantic' },
+          { emoji: '💻', label: 'Techy & Curious', sub: 'Gadgets, code, always online', val: 'techy' },
+        ]
+      },
+      {
+        id: 'occasion',
+        text: "What's the occasion?",
+        hint: "Even 'just because' counts.",
+        options: [
+          { emoji: '🎂', label: 'Birthday', sub: 'Make it memorable', val: 'birthday' },
+          { emoji: '💑', label: 'Anniversary', sub: 'Romantic & meaningful', val: 'anniversary' },
+          { emoji: '🎓', label: 'Achievement / Grad', sub: 'Celebrate a milestone', val: 'achievement' },
+          { emoji: '✨', label: 'Just Because', sub: 'No reason needed', val: 'any' },
+        ]
+      },
+      {
+        id: 'budget',
+        text: "What's your budget?",
+        hint: 'We have options at every price.',
+        options: [
+          { emoji: '💸', label: 'Under ₹500', sub: 'Small but thoughtful', val: 'under500' },
+          { emoji: '🎯', label: '₹500 – ₹1,500', sub: 'Sweet spot', val: '500-1500' },
+          { emoji: '🎁', label: '₹1,500 – ₹3,000', sub: 'A bit extra', val: '1500-3000' },
+          { emoji: '👑', label: '₹3,000+', sub: 'Go all out', val: '3000+' },
+        ]
+      },
+      {
+        id: 'vibe',
+        text: 'Pick their vibe:',
+        hint: 'What would make them smile most?',
+        options: [
+          { emoji: '🕯️', label: 'Warm & Cosy', sub: 'Soft lights, candles, comfort', val: 'cozy' },
+          { emoji: '🎵', label: 'Music & Memories', sub: 'Sentimental, nostalgic, soulful', val: 'romantic' },
+          { emoji: '⚡', label: 'Sharp & Modern', sub: 'Minimal, functional, cool', val: 'techy' },
+          { emoji: '🌟', label: 'Bold & Expressive', sub: 'Statement pieces, personality', val: 'bold' },
+        ]
+      }
+    ];
+
+    const PERSONAS = {
+      cozy: { label: 'The Cosy Soul', desc: 'Someone who loves warmth, comfort, and quiet pleasures.' },
+      bold: { label: 'The Bold Explorer', desc: 'Someone who lives out loud and loves bold, expressive things.' },
+      romantic: { label: 'The Dreamy Romantic', desc: 'Someone sentimental who loves beauty, music, and meaning.' },
+      techy: { label: 'The Tech Enthusiast', desc: 'Someone who loves gadgets, efficiency, and staying ahead.' },
+    };
+
+    const WHY = {
+      cozy: 'Perfect for their cosy, comfort-loving personality.',
+      bold: 'Matches their bold, expressive energy.',
+      romantic: 'A sentimental pick for someone who loves meaning.',
+      techy: 'Made for the tech-forward, efficiency-driven mind.',
+    };
+
+    let current = 0;
+    let answers = {};
+
+    function startQuiz() {
+      document.getElementById('quiz-landing').style.display = 'none';
+      document.getElementById('quiz-engine').classList.add('active');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = QUESTIONS[current];
+      const pct = Math.round((current / QUESTIONS.length) * 100);
+      document.getElementById('progress-label').textContent = `Question ${current + 1} of ${QUESTIONS.length}`;
+      document.getElementById('progress-pct').textContent = pct + '%';
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('back-btn').style.display = current > 0 ? 'block' : 'none';
+      document.getElementById('next-btn').disabled = !answers[q.id];
+      document.getElementById('next-btn').textContent = current === QUESTIONS.length - 1 ? 'See My Gifts ✦' : 'Next →';
+
+      document.getElementById('question-mount').innerHTML = `
+        <div class="question-card">
+          <div class="question-num">Question ${current + 1} / ${QUESTIONS.length}</div>
+          <h2 class="question-text">${q.text}</h2>
+          <p class="question-hint">${q.hint}</p>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <button class="option-tile ${answers[q.id] === opt.val ? 'selected' : ''}"
+                onclick="selectOption('${q.id}','${opt.val}',this)">
+                <span class="option-emoji">${opt.emoji}</span>
+                <span class="option-label">${opt.label}</span>
+                <span class="option-sub">${opt.sub}</span>
+              </button>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    function selectOption(qid, val, el) {
+      answers[qid] = val;
+      document.querySelectorAll('.option-tile').forEach(t => t.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function goNext() {
+      if (current < QUESTIONS.length - 1) {
+        current++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function goBack() {
+      if (current > 0) { current--; renderQuestion(); }
+    }
+
+    // RECOMMENDATION ENGINE
+    function scoreProduct(p, ans) {
+      let score = 0;
+      // Vibe match
+      const vibes = [ans.personality, ans.vibe].filter(Boolean);
+      vibes.forEach(v => { if (p.vibe.includes(v)) score += 3; });
+      // Budget match
+      if (p.budget === ans.budget) score += 4;
+      // Occasion match
+      if (p.occasion.includes(ans.occasion) || p.occasion.includes('any')) score += 2;
+      // Recipient boost
+      if (ans.recipient === 'romantic' && (p.category === 'vinyl' || p.category === 'selfcare')) score += 1;
+      if (ans.recipient === 'colleague' && p.category === 'books') score += 1;
+      if (ans.recipient === 'friend' && p.category === 'tech') score += 1;
+      return score;
+    }
+
+    function showResults() {
+      document.getElementById('quiz-engine').classList.remove('active');
+      const scored = PRODUCTS.map(p => ({ ...p, score: scoreProduct(p, answers) }))
+        .sort((a, b) => b.score - a.score);
+      const top3 = scored.slice(0, 3);
+
+      const persona = PERSONAS[answers.personality] || PERSONAS.cozy;
+      const whyMsg = WHY[answers.personality] || WHY.cozy;
+
+      const shareText = `I got "${persona.label}" on the GiftHub Gift Quiz! 🎁 My top match: ${top3[0].name} — find your perfect gift at GiftHub`;
+
+      const resultsEl = document.getElementById('quiz-results');
+      resultsEl.classList.add('active');
+      resultsEl.innerHTML = `
+        <div class="results-header">
+          <div class="results-persona-badge">✦ Your Gift Persona</div>
+          <h2 class="results-title">${persona.label}</h2>
+          <p class="results-subtitle">${persona.desc} Here are your 3 perfect gift matches.</p>
+          <div class="results-actions">
+            <button class="btn btn-primary" onclick="copyShare(\`${shareText.replace(/`/g,'\\`')}\`)">Share My Results 🔗</button>
+            <a href="products.html" class="btn btn-outline">Browse All Gifts</a>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          ${top3.map((p, i) => `
+            <div class="result-card">
+              <div class="result-rank ${i === 0 ? 'top' : ''}">${i === 0 ? '🏆 Top Match' : i === 1 ? '✦ Great Match' : '✦ Also Perfect'}</div>
+              <div class="result-img">
+  <img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                <span class="ph-label">${p.name.split('–')[0].trim()}</span>
+                <span class="ph-hint">📷 ${p.imgHint}</span>
+              </div>
+              <div class="result-info">
+                <div class="result-cat">${categoryLabel(p.category)}</div>
+                <div class="result-name">${p.name}</div>
+                <div class="result-price">₹${p.price.toLocaleString('en-IN')}</div>
+                <div class="result-why">${whyMsg}</div>
+                <button class="btn btn-primary btn-sm btn-full" onclick="Cart.add('${p.id}');this.textContent='Added ✓';setTimeout(()=>this.textContent='Add to Cart',1800)">Add to Cart</button>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <div class="retake-section">
+          <p style="color:var(--muted);font-size:0.875rem;margin-bottom:1rem">Not quite right? Try again.</p>
+          <button class="btn btn-outline" onclick="retakeQuiz()">Retake Quiz</button>
+        </div>`;
+    }
+
+    function copyShare(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✓ Results link copied to clipboard!');
+      }).catch(() => {
+        showToast('Share: ' + text);
+      });
+    }
+
+    function retakeQuiz() {
+      current = 0;
+      answers = {};
+      document.getElementById('quiz-results').classList.remove('active');
+      document.getElementById('quiz-results').innerHTML = '';
+      document.getElementById('quiz-engine').classList.add('active');
+      renderQuestion();
+    }
+  </script>
+</body>
+</html>
