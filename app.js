@@ -188,12 +188,13 @@ function renderFooter() {
 }
 
 // ── RENDER PRODUCT CARD ──
+// FIX: was using `p.id` (undefined) — corrected to `product.id`
 function renderProductCard(product) {
   return `
   <div class="product-card">
     <div class="product-img-wrap">
       ${product.img
-        ? `<img src="${product.img}" alt="${product.name}">`
+        ? `<img src="${product.img}" alt="${product.name}" loading="lazy">`
         : `<div class="product-img-placeholder">
             <span class="ph-icon">${categoryIcon(product.category)}</span>
             <span class="ph-label">${product.name.split('–')[0].trim()}</span>
@@ -207,8 +208,8 @@ function renderProductCard(product) {
       <h3 class="product-name">${product.name}</h3>
       <p class="product-price">₹${product.price.toLocaleString('en-IN')}</p>
       <div class="product-actions">
-        <button class="btn btn-primary btn-sm" style="flex:1" onclick="Cart.add('${product.id}');this.textContent='Added ✓';setTimeout(()=>this.textContent='Add to Cart',1800)">Add to Cart</button>
-        <a href="products.html?id=${product.id}" class="btn btn-outline btn-sm">View</a>
+        <button class="btn btn-primary btn-sm" onclick="Cart.add('${product.id}')">Add to Cart</button>
+        <a class="btn btn-outline btn-sm" href="product.html?id=${product.id}">View →</a>
       </div>
     </div>
   </div>`;
@@ -222,7 +223,7 @@ function categoryLabel(cat) {
   return { tech: 'Tech & Gadgets', selfcare: 'Self-Care', books: 'Books', vinyl: 'Taylor Swift Vinyl' }[cat] || cat;
 }
 
-// ── INIT NAV ON ALL PAGES ──
+// ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
   Cart.updateBadge();
 });
