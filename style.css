@@ -36,6 +36,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ─── NAV ─────────────────────────────────────────────── */
@@ -136,7 +137,7 @@ nav {
   transition: all var(--transition);
   border: none;
   text-decoration: none;
-  white-space: nowrap;
+  /* NOTE: no white-space: nowrap here — product-actions handles it per-button */
 }
 .btn-primary {
   background: var(--amber);
@@ -268,9 +269,25 @@ nav {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--amber-dark);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
-.product-actions { display: flex; gap: 8px; }
+
+/* ─── PRODUCT ACTIONS — THE FIX ──────────────────────── */
+.product-actions {
+  display: flex;
+  gap: 6px;
+}
+.product-actions .btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0.48rem 0.6rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  justify-content: center;
+  text-align: center;
+}
 
 /* ─── SECTION LAYOUTS ─────────────────────────────────── */
 .section {
@@ -412,6 +429,8 @@ footer {
   background: var(--white);
   transition: border-color var(--transition), box-shadow var(--transition);
   outline: none;
+  /* Prevent iOS zoom on focus (font-size must be ≥16px on iOS) */
+  -webkit-appearance: none;
 }
 .form-input:focus {
   border-color: var(--amber);
@@ -503,7 +522,6 @@ footer {
   0%, 100% { transform: translateY(0);   }
   50%       { transform: translateY(-8px); }
 }
-
 .animate-in {
   animation: fadeInUp 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
 }
@@ -520,11 +538,19 @@ footer {
   .section-title { font-size: 1.6rem; }
   .btn { font-size: 0.85rem; padding: 0.7rem 1.4rem; }
 }
+
 @media (max-width: 480px) {
-  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
   .grid-3 { grid-template-columns: 1fr; }
-  .product-name { font-size: 0.9rem; }
+  /* Product card — tighter on small phones */
+  .product-info { padding: 0.7rem 0.8rem 0.9rem; }
+  .product-name { font-size: 0.875rem; }
+  .product-price { font-size: 0.9rem; margin-bottom: 8px; }
+  .product-actions { gap: 5px; }
+  .product-actions .btn { font-size: 0.72rem; padding: 0.4rem 0.45rem; }
   .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
   .toast { left: 1rem; right: 1rem; bottom: 1rem; }
 }
-.hero-title { font-size: 3.2rem; }
+
+/* Hero title override from index.html inline — keep consistent */
+.hero-title { font-size: 4.5rem; }
