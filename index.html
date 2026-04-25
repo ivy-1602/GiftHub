@@ -6,76 +6,96 @@
   <title>GiftHub – Find the Perfect Gift</title>
   <meta name="description" content="Curated gifts for every personality. Tech, self-care, books, and Taylor Swift vinyls. Take the quiz.">
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
   <style>
 
-    /* ═══════════════════════════════════════════════
-       HERO
-       Mobile order:  [heading] [text] [buttons] [image]
-       Desktop order: [left: heading+text+buttons] [right: image]
-    ═══════════════════════════════════════════════ */
+    :root {
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    body { background: #FDF6ED; }
+
+    /* ═══════════════════════════════════════════════════
+       HERO — cream background, amber glow only near text
+    ═══════════════════════════════════════════════════ */
+    .hero-section {
+      background: #FDF6ED;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Soft amber glow that sits ONLY behind the left content column */
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      left: -80px; top: 40px;
+      width: 420px; height: 420px;
+      background: radial-gradient(ellipse, rgba(232,160,48,0.12) 0%, transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
     .hero {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 3rem 2rem 5rem;
-
+      padding: 3.5rem 2rem 5rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto;
       grid-template-areas: "content visual";
       align-items: center;
       gap: 4rem;
-    }
-
-    .hero-content {
-      grid-area: content;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .hero-visual {
-      grid-area: visual;
       position: relative;
+      z-index: 1;
     }
 
-    /* ── Hero text ── */
+    .hero-content { grid-area: content; display: flex; flex-direction: column; }
+    .hero-visual  { grid-area: visual;  position: relative; }
+
+    /* Tag pill */
     .hero-tag {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--amber-light);
+      background: linear-gradient(135deg, #FBF0D9, #F5E0B5);
       color: var(--amber-dark);
-      border: 1px solid rgba(232,160,48,0.3);
-      padding: 6px 14px;
+      border: 1px solid rgba(232,160,48,0.32);
+      padding: 6px 16px;
       border-radius: var(--radius-pill);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-bottom: 1.5rem;
       width: fit-content;
       animation: fadeInUp 0.5s ease forwards;
+      box-shadow: 0 2px 12px rgba(232,160,48,0.14);
     }
 
+    /* Headline — same as the version you liked */
     .hero-title {
       font-family: var(--font-display);
-      font-size: 4.5rem;
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
+      font-size: clamp(3.4rem, 5.5vw, 5.2rem);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -0.025em;
       color: var(--charcoal);
       margin-bottom: 1.25rem;
-      animation: fadeInUp 0.5s 0.1s ease both;
+      animation: fadeInUp 0.55s 0.08s ease both;
     }
-    .hero-title em { font-style: italic; color: var(--amber); }
+    .hero-title em {
+      font-style: italic;
+      color: var(--amber-dark);
+      font-weight: 400;
+    }
 
     .hero-sub {
-      font-size: 1.05rem;
+      font-size: 1rem;
       color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 2rem;
-      max-width: 460px;
-      animation: fadeInUp 0.5s 0.2s ease both;
+      line-height: 1.75;
+      margin-bottom: 2.25rem;
+      max-width: 440px;
+      animation: fadeInUp 0.55s 0.16s ease both;
     }
 
     .hero-actions {
@@ -83,247 +103,400 @@
       align-items: center;
       gap: 1rem;
       flex-wrap: wrap;
-      animation: fadeInUp 0.5s 0.3s ease both;
-      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.55s 0.24s ease both;
+      margin-bottom: 2.75rem;
     }
 
     .hero-stats {
       display: flex;
-      gap: 2rem;
-      animation: fadeInUp 0.5s 0.4s ease both;
+      border-top: 1px solid rgba(196,132,26,0.2);
+      padding-top: 1.75rem;
+      animation: fadeInUp 0.55s 0.32s ease both;
     }
+    .stat-item {
+      flex: 1;
+      padding-right: 1.5rem;
+      border-right: 1px solid rgba(196,132,26,0.18);
+      margin-right: 1.5rem;
+    }
+    .stat-item:last-child { border-right: none; margin-right: 0; padding-right: 0; }
     .stat-num {
       font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 700;
+      font-size: 2.2rem;
+      font-weight: 600;
       color: var(--charcoal);
+      line-height: 1;
+      margin-bottom: 3px;
     }
     .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
+      font-size: 0.7rem;
+      color: var(--muted-light);
       font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
-    /* ── Hero image ── */
+    /* Hero image — blur-edge vignette */
     .hero-img-main {
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 22px;
       overflow: hidden;
-      background: var(--cream-dark);
-      animation: fadeIn 0.6s 0.2s ease both;
+      position: relative;
+      animation: fadeIn 0.7s 0.2s ease both;
+      box-shadow: 0 28px 70px rgba(30,26,22,0.14), 0 4px 18px rgba(30,26,22,0.07);
     }
     .hero-img-main img {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
       display: block;
       border-radius: 22px;
     }
+    /* Cream vignette on all edges */
+    .hero-img-main::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      box-shadow: inset 0 0 70px 22px #FDF6ED;
+      pointer-events: none;
+    }
 
-    /* ── Float cards ── */
+    /* Float cards */
     .hero-float-card {
       position: absolute;
-      background: var(--white);
+      background: rgba(255,255,255,0.97);
       border-radius: 14px;
-      padding: 12px 16px;
-      box-shadow: 0 8px 32px rgba(30,26,22,0.14);
+      padding: 11px 15px;
+      box-shadow: 0 8px 32px rgba(30,26,22,0.12);
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 500;
       animation: float 3s ease-in-out infinite;
       white-space: nowrap;
+      border: 1px solid rgba(232,160,48,0.16);
+      z-index: 2;
     }
     .fc-quiz  { bottom: 1.5rem; left: -1.5rem; }
     .fc-match { top: 1.5rem; right: -1rem; animation-delay: 1.5s; }
+    .fc-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--amber);
+      flex-shrink: 0;
+    }
 
-    /* ═══════════════════════════════════════════════
-       CATEGORIES
-    ═══════════════════════════════════════════════ */
-    .categories {
-      background: var(--charcoal);
-      padding: 3rem 2rem;
-    }
-    .categories-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-    }
-    .categories-inner h2 {
-      font-family: var(--font-display);
-      color: var(--cream);
-      font-size: 1.1rem;
-      font-weight: 400;
-      font-style: italic;
-      margin-bottom: 1.5rem;
-      opacity: 0.7;
-    }
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-    }
-    .cat-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      text-decoration: none;
-      transition: all var(--transition);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .cat-card:hover {
-      background: rgba(232,160,48,0.15);
-      border-color: rgba(232,160,48,0.4);
-      transform: translateY(-2px);
-    }
-    .cat-icon { font-size: 2rem; }
-    .cat-name {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: var(--cream);
-      font-weight: 600;
-    }
-    .cat-count { font-size: 0.75rem; color: rgba(253,246,237,0.5); }
+    /* ═══════════════════════════════════════════════════
+       CATEGORIES — solid charcoal, NO gradient
+    ═══════════════════════════════════════════════════ */
+    /* ═══ CATEGORIES — warm, rich, luxury ═══ */
+.categories {
+  background: linear-gradient(160deg, #1a1108 0%, #2b1d0e 50%, #1a1108 100%);
+  padding: 4rem 2rem 4.5rem;
+  position: relative;
+  overflow: hidden;
+}
+/* warm amber glow bottom-left */
+.categories::before {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -80px;
+  width: 440px; height: 440px;
+  background: radial-gradient(circle, rgba(232,160,48,0.13) 0%, transparent 65%);
+  pointer-events: none;
+}
+/* soft glow top-right */
+.categories::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(196,132,26,0.09) 0%, transparent 65%);
+  pointer-events: none;
+}
+.categories-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.categories-inner h2 {
+  font-family: var(--font-display);
+  color: rgba(253,246,237,0.42);
+  font-size: 1.05rem;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 1.75rem;
+}
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.cat-card {
+  background: linear-gradient(145deg, rgba(255,240,210,0.07) 0%, rgba(232,160,48,0.04) 100%);
+  border: 1px solid rgba(232,160,48,0.16);
+  border-radius: 18px;
+  padding: 2rem 1.6rem 1.8rem;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+/* shimmer line top */
+.cat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,160,48,0.45), transparent);
+  transition: opacity 0.35s ease;
+  opacity: 0.6;
+}
+/* amber underline slide */
+.cat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--amber), var(--amber-dark), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.42s cubic-bezier(0.4,0,0.2,1);
+}
+.cat-card:hover {
+  background: linear-gradient(145deg, rgba(255,240,210,0.13) 0%, rgba(232,160,48,0.08) 100%);
+  border-color: rgba(232,160,48,0.38);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 48px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(232,160,48,0.12),
+    inset 0 1px 0 rgba(255,240,210,0.1);
+}
+.cat-card:hover::before { opacity: 1; }
+.cat-card:hover::after  { transform: scaleX(1); }
 
-    /* ═══════════════════════════════════════════════
-       QUIZ BANNER
-    ═══════════════════════════════════════════════ */
-    .quiz-section { padding: 4rem 2rem; }
+.cat-icon-wrap {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(232,160,48,0.18) 0%, rgba(196,132,26,0.1) 100%);
+  border: 1px solid rgba(232,160,48,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.35s ease;
+  box-shadow: 0 4px 16px rgba(232,160,48,0.1);
+}
+.cat-card:hover .cat-icon-wrap {
+  background: linear-gradient(135deg, rgba(232,160,48,0.28) 0%, rgba(196,132,26,0.18) 100%);
+  box-shadow: 0 6px 20px rgba(232,160,48,0.2);
+}
+.cat-icon-wrap svg {
+  width: 21px; height: 21px;
+  stroke: var(--amber);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cat-name {
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  color: #FDF0DC;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+.cat-count {
+  font-size: 0.68rem;
+  color: rgba(232,160,48,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+    /* ═══════════════════════════════════════════════════
+       QUIZ SECTION — plain cream bg, solid dark card
+    ═══════════════════════════════════════════════════ */
+    .quiz-section { padding: 4rem 2rem; background: #FDF6ED; }
+
     .quiz-banner {
-      background: linear-gradient(135deg, #1E1A16 0%, #3D3529 100%);
+      background: linear-gradient(135deg, #1E1A16 0%, #3D3529 55%, #2A2018 100%);
       border-radius: 24px;
-      padding: 3.5rem 3rem;
+      padding: 3.5rem 3.75rem;
       display: grid;
       grid-template-columns: 1fr auto;
       align-items: center;
-      gap: 2rem;
+      gap: 2.5rem;
       max-width: 1180px;
       margin: 0 auto;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 24px 64px rgba(30,26,22,0.18);
     }
+
+    /* ✦ watermark inside the banner — restored */
     .quiz-banner::before {
-      content: '🎁';
+      content: '✦';
       position: absolute;
-      right: 220px;
+      right: 210px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 5rem;
-      opacity: 0.08;
+      font-size: 8.5rem;
+      color: rgba(232,160,48,0.07);
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+
+    /* Amber glow top-right corner of banner */
+    .quiz-banner::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(232,160,48,0.16) 0%, transparent 68%);
       pointer-events: none;
     }
+
+    /* Left amber border accent */
+    .quiz-star-accent {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, transparent 0%, var(--amber) 35%, var(--amber-dark) 65%, transparent 100%);
+      border-radius: 0 2px 2px 0;
+    }
+
     .quiz-banner-label {
       font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--amber);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .quiz-banner h2 {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      color: var(--cream);
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.02em;
-    }
-    .quiz-banner p {
-      color: rgba(253,246,237,0.65);
-      font-size: 0.95rem;
-      max-width: 500px;
+    /* Decorative lines either side of label text */
+    .quiz-banner-label::before,
+    .quiz-banner-label::after {
+      content: '';
+      flex: 0 0 22px;
+      height: 1px;
+      background: rgba(232,160,48,0.4);
     }
 
-    /* ═══════════════════════════════════════════════
-       FEATURED
-    ═══════════════════════════════════════════════ */
+    .quiz-banner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: var(--cream);
+      font-weight: 400;
+      font-style: italic;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+    }
+    .quiz-banner p {
+      color: rgba(253,246,237,0.52);
+      font-size: 0.92rem;
+      max-width: 480px;
+      line-height: 1.72;
+    }
+    .quiz-content { position: relative; z-index: 1; }
+    .quiz-cta     { position: relative; z-index: 1; flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════════════
+       FEATURED — plain cream
+    ═══════════════════════════════════════════════════ */
     .featured-wrap {
-      padding: 4rem 2rem;
+      padding: 4rem 2rem 5rem;
       max-width: 1180px;
       margin: 0 auto;
     }
+    .featured-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.75rem;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-dark);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .section-title em { font-style: italic; color: var(--amber-dark); }
 
-    /* ═══════════════════════════════════════════════
-       RESPONSIVE — TABLET (≤900px)
-    ═══════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════ */
     @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
-        grid-template-areas:
-          "content"
-          "visual";
+        grid-template-areas: "content" "visual";
         gap: 2rem;
         padding: 2rem 1.5rem 3rem;
-        align-items: start;
       }
-
-      .hero-visual {
-        width: 100%;
-      }
-
-      /* float cards too close to edges on tablet — pull back */
       .fc-quiz  { left: 0.5rem; }
       .fc-match { right: 0.5rem; }
-
-      .hero-title { font-size: 2.4rem; }
-      .hero-stats { gap: 1.5rem; }
-
+      .hero-title { font-size: clamp(3rem, 8vw, 4rem); }
       .cat-grid { grid-template-columns: repeat(2, 1fr); }
-
       .quiz-banner {
         grid-template-columns: 1fr;
         text-align: center;
-        padding: 2.5rem 1.5rem;
+        padding: 2.75rem 2rem;
       }
       .quiz-banner::before { display: none; }
+      .quiz-banner-label { justify-content: center; }
       .quiz-banner p { margin: 0 auto; }
-      .quiz-banner .btn { width: fit-content; margin: 0 auto; }
+      .featured-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
     }
 
-    /* ═══════════════════════════════════════════════
-       RESPONSIVE — MOBILE (≤600px)
-    ═══════════════════════════════════════════════ */
     @media (max-width: 600px) {
-      .hero {
-        padding: 1.5rem 1rem 2.5rem;
-        gap: 1.75rem;
-      }
-
-      .hero-title { font-size: 2rem; }
-      .hero-sub   { font-size: 0.95rem; }
-
-      .hero-actions {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
-      }
-      .hero-actions .btn { text-align: center; justify-content: center; }
-
-      .hero-stats { gap: 1rem; }
-      .stat-num   { font-size: 1.3rem; }
-
-      /* float cards hidden on small screens — overlap looks bad */
+      .hero { padding: 1.5rem 1rem 2.5rem; gap: 1.75rem; }
+      .hero-title { font-size: clamp(2.8rem, 10vw, 3.6rem); }
+      .hero-sub { font-size: 0.95rem; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { justify-content: center; }
       .hero-float-card { display: none; }
-
-      .hero-img-main {
-        border-radius: 16px;
-        aspect-ratio: 4 / 3;   /* slightly wider on small phones */
-      }
-      .hero-img-main img { border-radius: 16px; }
-
+      .hero-img-main { border-radius: 16px; aspect-ratio: 4/3; }
+      .hero-img-main::after { border-radius: 16px; box-shadow: inset 0 0 40px 10px #FDF6ED; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding-top: 1.5rem; }
+      .stat-item { border-right: none; margin-right: 0; padding-right: 0; }
+      .categories { padding: 2.5rem 1rem; }
       .cat-grid { gap: 0.75rem; }
-      .cat-card { padding: 1rem; }
-      .cat-icon { font-size: 1.5rem; }
-      .cat-name { font-size: 0.95rem; }
-
+      .cat-card { padding: 1.25rem 1rem; }
       .quiz-section { padding: 2rem 1rem; }
-      .featured-wrap { padding: 2.5rem 1rem; }
+      .quiz-banner { padding: 2.5rem 1.5rem; }
+      .quiz-cta .btn { width: 100%; justify-content: center; }
+      .featured-wrap { padding: 2.5rem 1rem 4rem; }
+      .hero-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(196,132,26,0.2);
+}
     }
-
   </style>
 </head>
 <body>
@@ -333,66 +506,54 @@
   <main class="page-wrap">
 
     <!-- ─── HERO ─────────────────────────────────────── -->
-    <div class="hero">
+    <div class="hero-section">
+      <div class="hero">
 
-      <!-- LEFT / TOP: all text + CTAs -->
-      <div class="hero-content">
-        <div class="hero-tag">✦ 24+ Curated Gifts</div>
+        <div class="hero-content">
+          
 
-        <h1 class="hero-title">
-          Find the <em>perfect</em><br>gift for your loved ones.
-        </h1>
+          <h1 class="hero-title">
+            Find the <em>perfect</em><br>gift for your<br>loved ones.
+          </h1>
 
-        <p class="hero-sub">
-          Tech lovers, bookworms, self-care luxury obsessed ones, music lovers —
-          GiftHub has something thoughtful for everyone. Take our 5-question quiz
-          and find it in 60 seconds.
-        </p>
+          <p class="hero-sub">
+            Tech lovers, bookworms, self-care obsessed ones, musical hearts...
+            GiftHub has something thoughtful for everyone. Take our
+            5-question quiz and find it in 60 seconds.
+          </p>
 
-        <div class="hero-actions">
-          <a href="quiz.html" class="btn btn-primary">Take the Gift Quiz ✦</a>
-          <a href="products.html" class="btn btn-outline">Browse All Gifts</a>
+          <div class="hero-actions">
+            <a href="quiz.html" class="btn btn-primary" style="font-size:0.95rem;padding:0.85rem 2rem;">Take the Gift Quiz ✦</a>
+            <a href="products.html" class="btn btn-outline">Browse All Gifts</a>
+          </div>
+
+          <div class="hero-tag hero-tag-strip">
+  ✦ 24+ Curated Gifts &nbsp;·&nbsp; 4 Categories &nbsp;·&nbsp; 60 sec Match
+</div>
         </div>
 
-        <div class="hero-stats">
-          <div class="stat-item">
-            <div class="stat-num">24+</div>
-            <div class="stat-label">Curated Gifts</div>
+        <div class="hero-visual">
+          <div class="hero-img-main">
+            <img src="https://i.imgur.com/aukples.jpeg" alt="Curated gift flatlay">
           </div>
-          <div class="stat-item">
-            <div class="stat-num">4</div>
-            <div class="stat-label">Categories</div>
+          <div class="hero-float-card fc-quiz">
+            <div class="fc-dot"></div>
+            <div>
+              <div style="font-size:0.68rem;color:var(--muted);margin-bottom:2px;">Quiz complete</div>
+              <div style="font-weight:600;color:var(--charcoal);">3 perfect matches ✓</div>
+            </div>
           </div>
-          <div class="stat-item">
-            <div class="stat-num">60 secs</div>
-            <div class="stat-label">To Find a Match</div>
+          <div class="hero-float-card fc-match">
+            <div class="fc-dot"></div>
+            <div>
+              <div style="font-size:0.68rem;color:var(--muted);margin-bottom:2px;">New arrival</div>
+              <div style="font-weight:600;color:var(--charcoal);">Only on GiftHub</div>
+            </div>
           </div>
         </div>
+
       </div>
-
-      <!-- RIGHT / BOTTOM: image — always visible -->
-      <div class="hero-visual">
-        <div class="hero-img-main">
-          <img src="https://i.imgur.com/aukples.jpeg" alt="Curated gift flatlay">
-        </div>
-
-        <div class="hero-float-card fc-quiz">
-          <div>
-            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:2px;">Quiz complete</div>
-            <div style="font-weight:600;">3 perfect matches ✓</div>
-          </div>
-        </div>
-
-        <div class="hero-float-card fc-match">
-          <div>
-            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:2px;">New arrival</div>
-            <div style="font-weight:600;">TTPD Vinyl 🎵</div>
-          </div>
-        </div>
-      </div>
-
     </div>
-    <!-- ─── /HERO ──────────────────────────────────── -->
 
 
     <!-- ─── CATEGORIES ───────────────────────────────── -->
@@ -400,26 +561,39 @@
       <div class="categories-inner">
         <h2>Shop by category</h2>
         <div class="cat-grid">
+
           <a href="products.html?cat=tech" class="cat-card">
-            <span class="cat-icon">🎧</span>
+            <div class="cat-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3v5zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3v5z"/></svg>
+            </div>
             <div class="cat-name">Tech &amp; Gadgets</div>
             <div class="cat-count">6 products</div>
           </a>
+
           <a href="products.html?cat=selfcare" class="cat-card">
-            <span class="cat-icon">🌿</span>
+            <div class="cat-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
             <div class="cat-name">Self-Care</div>
             <div class="cat-count">6 products</div>
           </a>
+
           <a href="products.html?cat=books" class="cat-card">
-            <span class="cat-icon">📖</span>
+            <div class="cat-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            </div>
             <div class="cat-name">Books</div>
             <div class="cat-count">6 products</div>
           </a>
+
           <a href="products.html?cat=vinyl" class="cat-card">
-            <span class="cat-icon">🎵</span>
+            <div class="cat-icon-wrap">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 9V3M15 12h6M12 15v6M9 12H3"/></svg>
+            </div>
             <div class="cat-name">Taylor Swift Vinyls</div>
             <div class="cat-count">6 products</div>
           </a>
+
         </div>
       </div>
     </div>
@@ -428,42 +602,43 @@
     <!-- ─── QUIZ BANNER ──────────────────────────────── -->
     <div class="quiz-section">
       <div class="quiz-banner">
-        <div>
-          <div class="quiz-banner-label">✦ AI-Powered</div>
-          <h2>Not sure what to get?</h2>
+        <div class="quiz-star-accent"></div>
+        <div class="quiz-content">
+          <div class="quiz-banner-label">✦ AI-Powered Matching</div>
+          <h2>Not sure what to get for them?</h2>
           <p>Answer 5 fun questions about who you're gifting and we'll match them with the perfect present from our curated catalog.</p>
         </div>
-        <a href="quiz.html" class="btn btn-primary" style="font-size:1rem;padding:1rem 2rem;">
-          Start Quiz →
-        </a>
+        <div class="quiz-cta">
+          <a href="quiz.html" class="btn btn-primary" style="font-size:1rem;padding:1rem 2.25rem;white-space:nowrap;">
+            Start Quiz →
+          </a>
+        </div>
       </div>
     </div>
 
 
     <!-- ─── FEATURED PRODUCTS ────────────────────────── -->
     <div class="featured-wrap">
-      <div class="section-header">
-        <div class="section-label">✦ Handpicked</div>
-        <h2 class="section-title">Featured Gifts</h2>
+      <div class="featured-header">
+        <div>
+          <div class="section-label">✦ Handpicked</div>
+          <h2 class="section-title">Featured <em>Gifts</em></h2>
+        </div>
+        <a href="products.html" class="btn btn-outline" style="font-size:0.82rem;padding:0.55rem 1.3rem;">View All 24 →</a>
       </div>
       <div class="grid-4" id="featured-grid"></div>
-      <div style="text-align:center;margin-top:2.5rem">
-        <a href="products.html" class="btn btn-outline">View All 24 Gifts →</a>
-      </div>
     </div>
 
   </main>
 
   <div id="footer-root"></div>
-  <div class="toast" id="toast"></div>
 
   <script src="app.js"></script>
   <script>
     document.getElementById('nav-root').innerHTML  = renderNav('home');
     document.getElementById('footer-root').innerHTML = renderFooter();
 
-    // Featured: 1 from each category
-    const featured = ['t1','s1','b4','v5']
+    const featured = ['t4','s6','b4','s2']
       .map(id => PRODUCTS.find(p => p.id === id))
       .filter(Boolean);
     document.getElementById('featured-grid').innerHTML = featured.map(renderProductCard).join('');
