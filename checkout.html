@@ -365,6 +365,71 @@ select.form-input {
     grid-template-columns: 1fr;
   }
 }
+    /* ── OVERFLOW / ZOOM FIX ─────────────────────────────── */
+
+/* Prevent ANY element from causing horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Inputs must never exceed their container */
+.form-input,
+input,
+select,
+textarea {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Grid columns collapse below their min-width and push out — clamp them */
+.form-row {
+  grid-template-columns: 1fr 1fr;
+  min-width: 0;
+}
+
+.form-row > * {
+  min-width: 0;
+}
+
+/* The checkout layout sidebar stacks on mobile */
+@media (max-width: 860px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+  .co-summary {
+    position: static;
+  }
+}
+
+/* Tighten padding on small screens so content breathes */
+@media (max-width: 600px) {
+  .checkout-wrap {
+    padding: 1rem 1rem 4rem;
+  }
+  .co-card {
+    padding: 1.25rem 1rem;
+    border-radius: 14px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .payment-methods {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .card-input-row {
+    grid-template-columns: 1fr;
+  }
+  .review-meta {
+    grid-template-columns: 1fr;
+  }
+  .checkout-hero {
+    padding: 1.5rem 1rem;
+  }
+  .steps-wrap {
+    padding: 0 1rem;
+  }
+}
   </style>
 </head>
 <body>
