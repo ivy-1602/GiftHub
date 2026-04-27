@@ -19,9 +19,17 @@ GiftHub takes your recipient's personality, runs it through a recommendation eng
 
 ## 📸 Screenshots
 
-| Landing Page | Product Catalog | Quiz CTA | Results |
-|---|---|---|---|
-| ![Landing](https://i.imgur.com/QiD16bC.png) | ![Catalog](https://i.imgur.com/2JSFTIQ.png) | ![Quiz](https://i.imgur.com/SNKijIU.png) | ![Results](https://i.imgur.com/LYelEqo.png) |
+**Landing Page**
+![Landing](https://i.imgur.com/QiD16bC.png)
+
+**Product Catalog**
+![Catalog](https://i.imgur.com/2JSFTIQ.png)
+
+**Quiz CTA**
+![Quiz](https://i.imgur.com/SNKijIU.png)
+
+**Results**
+![Results](https://i.imgur.com/LYelEqo.png)
 
 ---
 
