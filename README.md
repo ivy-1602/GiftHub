@@ -60,7 +60,7 @@ GiftHub takes your recipient's personality, runs it through a recommendation eng
 | Claude API (Anthropic) | Personalized gift suggestions |
 | Vercel | Deployment — live in seconds |
 
-No frameworks. No build tools. Just vibes and `fetch()`.
+No frameworks. No build tools. Just `fetch()`.
 
 ---
 
@@ -111,17 +111,17 @@ Add your Anthropic API key where the `fetch()` call is made in `quiz.js` for the
 
 | | |
 |---|---|
-| **Course** | E-Commerce — BE Semester 4 |
+| **Course** | E-Commerce — Semester 4 |
 | **Deployment** | Live on Vercel |
 | **Status** | ✅ Live and functional |
 
 ---
 
-## 📫 About
+## 📫 About me!
 
 **Uma Salunke** — SE AI & ML Engineering
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Uma_Salunke-blue?style=flat&logo=linkedin)](https://linkedin.com/in/uma-salunke)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Uma_Salunke-blue?style=flat&logo=linkedin)](https://linkedin.com/in/umasalunke7)
 [![GitHub](https://img.shields.io/badge/GitHub-ivy--1602-black?style=flat&logo=github)](https://github.com/ivy-1602)
 
 ---
