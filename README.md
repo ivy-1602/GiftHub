@@ -7,7 +7,7 @@
 
 ---
 
-## 💡 The Real Problem
+## 💡 The Real Problem.
 
 It's your best friend's wedding in 3 days. You want it to be *perfect*. You open 14 tabs. You close 14 tabs. You spiral. You send a "what do you want?" text at 11 PM or give a generic gift hamper.
 
